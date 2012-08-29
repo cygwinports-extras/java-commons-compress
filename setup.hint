@@ -1,5 +1,0 @@
-category: Java
-requires:
-sdesc: "Java file compression API"
-ldesc: "Commons Compress defines an API for working with ar, cpio, tar, 
-zip, gzip and bzip2 files."

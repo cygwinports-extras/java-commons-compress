@@ -1,0 +1,28 @@
+JAVA_CLASSPATH="xz.jar"
+inherit java
+
+CATEGORY="Java"
+SUMMARY="Java file compression library"
+DESCRIPTION="The Apache Commons Compress library defines an API for working with
+ar, cpio, Unix dump, tar, zip, gzip, XZ, Pack200 and bzip2 files."
+HOMEPAGE="http://commons.apache.org/compress/"
+SRC_URI="mirror://apache/${ORIG_PN//-//}/source/${P#java-}-src.tar.gz"
+SRC_DIR="${P#java-}-src"
+
+# java.util.jar.Pack200 not provided by GNU Classpath
+PATCH_URI="01-no-pack200.patch"
+DISTCLEANFILES="src/main/java/org/apache/commons/compress/compressors/pack200/*"
+
+src_compile() {
+	cd ${B}
+	mkdir -p build/classes
+	cygjavac -classpath ${CLASSPATH} -d build/classes $(find ${S}/src/main/java -name '*.java')
+	cygjar cf build/${P#java-}.jar -C build/classes org
+	cygjavadoc -classpath ${CLASSPATH} -d build/javadoc -sourcepath ${S}/src/main/java -subpackages org
+}
+
+src_install() {
+	cd ${B}/build
+	dojar *.jar
+	dojavadoc javadoc
+}
